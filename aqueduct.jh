@@ -1,0 +1,405 @@
+
+application {
+  config {
+    baseName aquasyscloud,
+    applicationType monolith,
+    packageName com.asada.administrator,
+    authenticationType jwt
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework angularX 
+    clientPackageManager npm,
+    prodDatabaseType mysql,
+    clientFramework angular,
+    databaseType sql 
+    dtoSuffix Dto
+    jhiPrefix cvf
+    languages [es, en]
+    nativeLanguage es,
+    enableSwaggerCodegen true
+    clientTheme default
+  }
+  entities all
+}
+
+dto all with mapstruct
+service all with serviceImpl
+paginate all with pagination
+filter all
+
+enum GeographicLocationType {
+	COUNTRY,
+    PROVINCE,
+    CANTON,
+    DISTRICT,
+    NEIGHBORHOOD
+}
+
+enum MeterStatus {
+	ACTIVE,
+    INACTIVE
+}
+
+enum InvoiceStatus {
+	PENDING,
+    CANCELED,
+    PAID
+}
+
+entity RelationshipType {
+	description String required maxlength(35)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity GeographicLocation {
+	description String required,
+    treasuryCode String required maxlength(2),
+    codeArea Integer,
+    locationType GeographicLocationType
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity ChargeType {
+	description String required maxlength(35)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity TariffType {
+	description String required maxlength(35)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity IdentifierType {
+	description String required maxlength(35)
+    treasuryCode String required maxlength(2)
+    code String required maxlength(5)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Person {
+	name String maxlength(40)
+    firstLastName String maxlength(30)
+    secondLastName String maxlength(30)
+    commercialName String maxlength(80)
+    identifier String required maxlength(12)
+    address String required maxlength(250)
+    foreignerAddress String maxlength(300)
+    email String required maxlength(160)
+    phoneNumber String required maxlength(10)
+    faxNumber String maxlength(10)
+    whatsApp String maxlength(15)
+    voucherEmail String maxlength(160)
+    naturalPerson Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Relationship {
+	username String required maxlength(50) unique
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Meter {
+	brand String required maxlength(50)
+    model String required maxlength(50)
+    serial String required maxlength(50)
+    installationDate ZonedDateTime
+    status MeterStatus required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity DataBillingConsumption {
+	receiverActivityCode String minlength(6) maxlength(6)
+    name String minlength(3) maxlength(100) required
+    identifierType IdentifierType required
+    identifierNumber String 
+    commercialName String minlength(3) maxlength(80)
+    location GeographicLocation required
+    address String minlength(5) maxlength(300)
+    phoneNumber Integer
+    email String maxlength(160)
+}
+
+entity Charge {
+	description String required maxlength(80)
+    treasuryCode String required maxlength(2) minlength(2)
+	value BigDecimal required
+	percentajeBasedCharge Boolean required
+	defaultChargeAppliedToInvoice Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity SnapshotCharge {
+	description String required maxlength(80)
+    treasuryCode String required maxlength(2) minlength(2)
+	value BigDecimal required
+	percentajeBasedCharge Boolean required
+	defaultChargeAppliedToInvoice Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Tariff {
+	description String required maxlength(35)
+    amount BigDecimal required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity RelationshipConfiguration { 
+	keyName String required maxlength(50)
+    keyValue String required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity SellingMethod {
+	description String required maxlength(40)
+    treasuryCode String required maxlength(3)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity PaymentMethod {
+	description String required maxlength(50)
+    treasuryCode String required maxlength(3)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Invoice {
+    isExportingSelling Boolean required
+    treasuryKey String maxlength(50)
+    activityCode String maxlength(6) minlength(6) required
+    treasuryConsecutive String required maxlength(20)
+    comments String maxlength(200)
+    totalTaxedServices BigDecimal required
+    totalExemptedServices BigDecimal required
+    totalExoneratedServices BigDecimal required
+    totalTaxedMerchandise BigDecimal required
+    totalExemptedMerchandises BigDecimal required
+    totalExoneratedMerchandises BigDecimal required
+    totalTaxed BigDecimal required
+    totalExempted BigDecimal required
+    totalExonerated BigDecimal required
+    totalSales BigDecimal required
+    totalDiscounts BigDecimal required
+    totalNetSale BigDecimal required
+    totalTax BigDecimal required
+    totalReturnedVat BigDecimal required
+    totalOtherCharges BigDecimal required
+    totalInvoice BigDecimal required
+    creditTerm String maxlength(10)
+    issueDate ZonedDateTime required
+    isElectronic Boolean required
+    status InvoiceStatus required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity InvoiceLine {
+    lineNumber Integer required
+	quantity Long required
+	unitaryPrice BigDecimal required
+	totalAmount BigDecimal required
+	subTotal BigDecimal required
+	taxableBase BigDecimal required
+	netTax BigDecimal required
+	totalLineAmount BigDecimal required
+    productDescriptionDn String required maxlength(200)
+    productCodeDn String required maxlength(20) //our system always will be working with the internal code
+    productCommercialUnitMeasureDn String maxlength(20)
+    cabysCode String required maxlength(13) minlength(13)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Discount {
+    amount BigDecimal required
+    nature String maxlength(80) required
+    active Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity SnapshotDiscount {
+	amount BigDecimal required
+    nature String maxlength(80) required
+    active Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Tax {
+	description String required maxlength(100)
+    treasuryCode String required maxlength(2) minlength(2)
+    defaultTaxAppliedToProducts Boolean required
+    percentage BigDecimal required
+	amount BigDecimal required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Product {
+	description String required maxlength(200)
+    internalCode String required maxlength(20)
+    commercialUnitMeasure String maxlength(20)
+    unitaryPrice BigDecimal required
+    cabysCode String required
+    cabysDescription String required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity UnitMeasure {
+	description String required unique maxlength(40)
+    treasuryCode String required unique maxlength(20)
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity SnapshotTax {
+	description String required maxlength(100)
+    treasuryCode String required maxlength(2) minlength(2)
+    defaultTaxAppliedToProducts Boolean required
+    percentage BigDecimal required
+	amount BigDecimal required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Comsuption {
+	periodCurrent ZonedDateTime required
+    readingCurrent Double required
+    periodBefore ZonedDateTime required
+    readingBefore Double required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity Voucher {
+	issuerDate ZonedDateTime required
+    status InvoiceStatus required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+entity VoucherLine {
+	number Integer required
+    quantity Double required
+    description String required
+    unitaryPrice BigDecimal required
+    totalAmount BigDecimal required
+    treasuryCode String required maxlength(2) minlength(2)
+	value BigDecimal required
+	percentajeBasedCharge Boolean required
+    createdBy String required maxlength(50)
+    createdDate Instant
+    lastModifiedBy String
+    lastModifiedDate Instant
+}
+
+relationship OneToMany {
+  IdentifierType{persons(identifier)} to Person{identifierType(description) required}
+  Person{relationships} to Relationship{person(identifier)}
+  GeographicLocation to Person
+  
+  RelationshipType{relationships} to Relationship{relationshipType(description)}
+  Relationship{subscribers} to Relationship{aqueduct}
+  
+  ChargeType{charges} to Charge{chargeType(description) required}
+  TariffType{charges} to Tariff{chargeType(description) required}
+  
+  GeographicLocation{children(description)} to GeographicLocation{parent(description)}
+  
+  Invoice{invoiceLines(unitaryPrice)} to InvoiceLine{invoice(treasuryConsecutive)},
+  Invoice{otherCharges(description)} to SnapshotCharge{invoice required},
+  Invoice{snapshotsTax(description)} to SnapshotTax{invoice required},
+  InvoiceLine{snapshotsTax(description)} to SnapshotTax{invoiceLine required},
+  Discount{snapshots(nature)} to SnapshotDiscount{discount(nature) required}
+  Tax{snapshots(description)} to SnapshotTax{tax(description) required}
+  Charge{snapshots(description)} to SnapshotCharge{charge(description)}
+  InvoiceLine{discounts(nature)} to SnapshotDiscount{invoiceLine}
+  
+  UnitMeasure{products(description)} to Product{unitMeasure(description) required}
+  Product to InvoiceLine{product(description) required},
+  Product{discounts(nature)} to Discount{product(description) required},
+  
+  Meter{comsuptions(period)} to Comsuption{meter(serial)}
+  Relationship{meters(serial)} to Meter{relationship}
+  Relationship{configurations(keyName)} to RelationshipConfiguration{relationship}
+  
+  Voucher{voucherLines} to VoucherLine{voucher}
+  Comsuption{vouchers} to Voucher{comsuption}
+}
+
+relationship OneToOne {
+	Meter to DataBillingConsumption
+}
+
+relationship ManyToMany {
+	Charge{relationships} to Relationship{charges(description)}
+  	Tariff{relationships} to Relationship{tariffs(description)}
+    PaymentMethod{vouchers(treasuryConsecutive) required} to Invoice{paymentMethods(description) required}
+  	SellingMethod{vouchers(treasuryConsecutive)} to Invoice{sellingMethods(description) required}
+    Product{taxes(description) required} to Tax{products(description) required}
+    
+}
+
+    
